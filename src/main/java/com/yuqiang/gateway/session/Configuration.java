@@ -2,6 +2,8 @@ package com.yuqiang.gateway.session;
 
 import com.yuqiang.gateway.bind.GenericReferenceRegistry;
 import com.yuqiang.gateway.bind.IGenericReference;
+import com.yuqiang.gateway.bind.MapperRegistry;
+import com.yuqiang.gateway.mapping.HttpStatement;
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
@@ -16,6 +18,8 @@ import java.util.Map;
 public class Configuration {
     private final GenericReferenceRegistry registry = new GenericReferenceRegistry(this);
 
+    private final MapperRegistry mapperRegistry = new MapperRegistry(this);
+    private final Map<String, HttpStatement> httpStatements = new HashMap<>();
     // RPC 应用服务配置项 api-gateway-test
     private final Map<String, ApplicationConfig> applicationConfigMap = new HashMap<>();
     // RPC 注册中心配置项 zookeeper://127.0.0.1:2181
@@ -61,6 +65,22 @@ public class Configuration {
 
     public IGenericReference getGenericReference(String methodName) {
         return registry.getGenericReference(methodName);
+    }
+
+    public void addHttpStatement(HttpStatement httpStatement) {
+        httpStatements.put(httpStatement.getUri(), httpStatement);
+    }
+
+    public HttpStatement getHttpStatement(String uri) {
+        return httpStatements.get(uri);
+    }
+
+    public void addMapper(HttpStatement httpStatement) {
+        mapperRegistry.addMapper(httpStatement);
+    }
+
+    public IGenericReference getMapper(String uri, GatewaySession gatewaySession) {
+        return mapperRegistry.getMapper(uri, gatewaySession);
     }
 
 }
