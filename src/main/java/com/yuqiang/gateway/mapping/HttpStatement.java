@@ -15,12 +15,16 @@ public class HttpStatement {
     /** 接口类型；GET、POST、PUT、DELETE */
     private HttpCommandType httpCommandType;
 
-    public HttpStatement(String application, String interfaceName, String methodName, String uri, HttpCommandType httpCommandType) {
+    /** 参数类型(RPC 限定单参数注册)；new String[]{"java.lang.String"}、new String[]{"cn.bugstack.gateway.rpc.dto.XReq"} */
+    private String parameterType;
+
+    public HttpStatement(String application, String interfaceName, String methodName,String parameterType, String uri, HttpCommandType httpCommandType) {
         this.application = application;
         this.interfaceName = interfaceName;
         this.methodName = methodName;
         this.uri = uri;
         this.httpCommandType = httpCommandType;
+        this.parameterType = parameterType;
     }
 
     public String getApplication() {
@@ -42,4 +46,9 @@ public class HttpStatement {
     public HttpCommandType getHttpCommandType() {
         return httpCommandType;
     }
+
+    public String getParameterType() {
+        return parameterType;
+    }
+
 }

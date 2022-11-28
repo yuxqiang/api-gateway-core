@@ -1,6 +1,5 @@
 package com.yuqiang.gateway.session;
 
-import com.yuqiang.gateway.bind.GenericReferenceRegistry;
 import com.yuqiang.gateway.bind.IGenericReference;
 import com.yuqiang.gateway.bind.MapperRegistry;
 import com.yuqiang.gateway.mapping.HttpStatement;
@@ -16,13 +15,11 @@ import java.util.Map;
  * 会话生命周期配置项
  */
 public class Configuration {
-    private final GenericReferenceRegistry registry = new GenericReferenceRegistry(this);
-
     private final MapperRegistry mapperRegistry = new MapperRegistry(this);
     private final Map<String, HttpStatement> httpStatements = new HashMap<>();
     // RPC 应用服务配置项 api-gateway-test
     private final Map<String, ApplicationConfig> applicationConfigMap = new HashMap<>();
-    // RPC 注册中心配置项 zookeeper://127.0.0.1:2181
+    // RPC 注册中心配置项 nacos://127.0.0.1:8848
     private final Map<String, RegistryConfig> registryConfigMap = new HashMap<>();
     // RPC 泛化服务配置项 cn.bugstack.gateway.rpc.IActivityBooth
     private final Map<String, ReferenceConfig<GenericService>> referenceConfigMap = new HashMap<>();
@@ -57,14 +54,6 @@ public class Configuration {
 
     public ReferenceConfig<GenericService> getReferenceConfig(String interfaceName) {
         return referenceConfigMap.get(interfaceName);
-    }
-
-    public void addGenericReference(String application, String interfaceName, String methodName) {
-        registry.addGenericReference(application, interfaceName, methodName);
-    }
-
-    public IGenericReference getGenericReference(String methodName) {
-        return registry.getGenericReference(methodName);
     }
 
     public void addHttpStatement(HttpStatement httpStatement) {
