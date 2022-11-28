@@ -1,6 +1,10 @@
 package com.yuqiang.gateway.socket;
 
+import com.yuqiang.gateway.session.Configuration;
 import com.yuqiang.gateway.session.defaults.DefaultGatewaySessionFactory;
+import com.yuqiang.gateway.socket.handlers.AuthorizationHandler;
+import com.yuqiang.gateway.socket.handlers.GatewayServerHandler;
+import com.yuqiang.gateway.socket.handlers.ProtocolDataHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -12,7 +16,10 @@ public class GatewayChannelInitializer extends ChannelInitializer<SocketChannel>
 
     private final DefaultGatewaySessionFactory gatewaySessionFactory;
 
-    public GatewayChannelInitializer(DefaultGatewaySessionFactory gatewaySessionFactory) {
+    private final Configuration configuration;
+
+    public GatewayChannelInitializer(Configuration configuration, DefaultGatewaySessionFactory gatewaySessionFactory) {
+        this.configuration = configuration;
         this.gatewaySessionFactory = gatewaySessionFactory;
     }
 
@@ -22,6 +29,8 @@ public class GatewayChannelInitializer extends ChannelInitializer<SocketChannel>
         line.addLast(new HttpRequestDecoder());
         line.addLast(new HttpResponseEncoder());
         line.addLast(new HttpObjectAggregator(1024 * 1024));
-        line.addLast(new GatewayServerHandler(gatewaySessionFactory));
+        line.addLast(new GatewayServerHandler(configuration));
+        line.addLast(new AuthorizationHandler(configuration));
+        line.addLast(new ProtocolDataHandler(gatewaySessionFactory));
     }
 }

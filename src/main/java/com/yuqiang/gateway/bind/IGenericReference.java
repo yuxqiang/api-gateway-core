@@ -1,8 +1,10 @@
 package com.yuqiang.gateway.bind;
 
+import com.yuqiang.gateway.executor.result.SessionResult;
+
 import java.util.Map;
 
 public interface IGenericReference {
 
-    Object $invoke(Map<String, Object> params);
+    SessionResult $invoke(Map<String, Object> params);
 }

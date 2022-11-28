@@ -1,5 +1,7 @@
 package com.yuqiang.gateway.session;
 
+import com.yuqiang.gateway.authorization.IAuth;
+import com.yuqiang.gateway.authorization.auth.AuthService;
 import com.yuqiang.gateway.bind.IGenericReference;
 import com.yuqiang.gateway.bind.MapperRegistry;
 import com.yuqiang.gateway.datasource.Connection;
@@ -27,6 +29,7 @@ public class Configuration {
     // RPC 泛化服务配置项 cn.bugstack.gateway.rpc.IActivityBooth
     private final Map<String, ReferenceConfig<GenericService>> referenceConfigMap = new HashMap<>();
 
+    private final IAuth auth = new AuthService();
     public Configuration() {
     }
 
@@ -86,4 +89,9 @@ public class Configuration {
     public Executor newExecutor(Connection connection) {
         return new SimpleExecutor(this, connection);
     }
+
+    public boolean authValidate(String uId, String token) {
+        return auth.validate(uId, token);
+    }
+
 }
