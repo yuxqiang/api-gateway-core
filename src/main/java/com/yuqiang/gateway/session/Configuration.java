@@ -2,6 +2,9 @@ package com.yuqiang.gateway.session;
 
 import com.yuqiang.gateway.bind.IGenericReference;
 import com.yuqiang.gateway.bind.MapperRegistry;
+import com.yuqiang.gateway.datasource.Connection;
+import com.yuqiang.gateway.executor.Executor;
+import com.yuqiang.gateway.executor.SimpleExecutor;
 import com.yuqiang.gateway.mapping.HttpStatement;
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
@@ -72,4 +75,7 @@ public class Configuration {
         return mapperRegistry.getMapper(uri, gatewaySession);
     }
 
+    public Executor newExecutor(Connection connection) {
+        return new SimpleExecutor(this, connection);
+    }
 }

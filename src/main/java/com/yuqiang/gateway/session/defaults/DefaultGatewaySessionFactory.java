@@ -3,6 +3,7 @@ package com.yuqiang.gateway.session.defaults;
 import com.yuqiang.gateway.datasource.DataSource;
 import com.yuqiang.gateway.datasource.DataSourceFactory;
 import com.yuqiang.gateway.datasource.unpooled.UnpooledDataSourceFactory;
+import com.yuqiang.gateway.executor.Executor;
 import com.yuqiang.gateway.session.Configuration;
 import com.yuqiang.gateway.session.GatewaySession;
 import com.yuqiang.gateway.session.GatewaySessionFactory;
@@ -20,7 +21,9 @@ public class DefaultGatewaySessionFactory implements GatewaySessionFactory {
         DataSourceFactory dataSourceFactory = new UnpooledDataSourceFactory();
         dataSourceFactory.setProperties(configuration, uri);
         DataSource dataSource = dataSourceFactory.getDataSource();
-        return new DefaultGatewaySession(configuration,uri,dataSource);
+        Executor executor = configuration.newExecutor(dataSource.getConnection());
+        // 创建会话：DefaultGatewaySession
+        return new DefaultGatewaySession(configuration, uri, executor);
     }
 
 }

@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface IGenericReference {
 
-    String $invoke(Map<String, Object> params);
+    Object $invoke(Map<String, Object> params);
 }
