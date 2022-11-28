@@ -28,23 +28,31 @@ public class Configuration {
     private final Map<String, ReferenceConfig<GenericService>> referenceConfigMap = new HashMap<>();
 
     public Configuration() {
-        // TODO 后期从配置中获取
-        ApplicationConfig application = new ApplicationConfig();
-        application.setName("api-gateway-test");
-        application.setQosEnable(false);
+    }
 
-        RegistryConfig registry = new RegistryConfig();
-        registry.setAddress("nacos://115.159.75.82:8848");
-        registry.setRegister(false);
 
-        ReferenceConfig<GenericService> reference = new ReferenceConfig<>();
-        reference.setInterface("cn.bugstack.gateway.rpc.IActivityBooth");
-        reference.setVersion("1.0.0");
-        reference.setGeneric("true");
+    public synchronized void registryConfig(String applicationName, String address, String interfaceName, String version) {
+        if (applicationConfigMap.get(applicationName) == null) {
+            ApplicationConfig application = new ApplicationConfig();
+            application.setName(applicationName);
+            application.setQosEnable(false);
+            applicationConfigMap.put(applicationName, application);
+        }
 
-        applicationConfigMap.put("api-gateway-test", application);
-        registryConfigMap.put("api-gateway-test", registry);
-        referenceConfigMap.put("cn.bugstack.gateway.rpc.IActivityBooth", reference);
+        if (registryConfigMap.get(applicationName) == null) {
+            RegistryConfig registry = new RegistryConfig();
+            registry.setAddress(address);
+            registry.setRegister(false);
+            registryConfigMap.put(applicationName, registry);
+        }
+
+        if (referenceConfigMap.get(interfaceName) == null) {
+            ReferenceConfig<GenericService> reference = new ReferenceConfig<>();
+            reference.setInterface(interfaceName);
+            reference.setVersion(version);
+            reference.setGeneric("true");
+            referenceConfigMap.put(interfaceName, reference);
+        }
     }
 
     public ApplicationConfig getApplicationConfig(String applicationName) {
